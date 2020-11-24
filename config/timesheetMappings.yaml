@@ -1,16 +1,4 @@
 parameters:
   timesheetMappings:
-    #COMET dev
-    837451: 10
-    #COMET needs study
-    837452: 8
-    #COMET meetings
-    837389: 46
-    #COMET qa
-    837390: 45
-    #LogAlto dev
-    905677: 554
-    #LogAlto meetings
-    905676: 555
-    #Other
-    837460: 42
+    #mapping example
+    1: 42
