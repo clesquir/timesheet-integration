@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  httpd:
+    extends:
+      service: app
+    ports:
+      - "8800:80"
+    restart: always
+    command: apache2-foreground
+
+  app:
+    build:
+      context: .
+      target: development
+    image: clesquir/timesheet-integration
+    environment:
+      APP_ENV: dev
+      XDEBUG_CONFIG: "remote_host=host.docker.internal"
+      PHP_IDE_CONFIG: "serverName=timesheet-integration"
+    volumes:
+      - .:/app
