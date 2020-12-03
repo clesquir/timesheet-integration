@@ -22,16 +22,20 @@ final class ImportCSVToTimesheetConsole extends Command {
 
 	protected function configure() {
 		$this->setName('app:import:csv-to-timesheet')
-			->setDescription('Import Timeular entries to Timesheet.')
-			->addArgument('date', InputArgument::REQUIRED, 'Date to import')
+			->setDescription('Import Tyme2 entries to Timesheet.')
+			->addArgument('filename', InputArgument::REQUIRED, 'filename to import')
 			->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not import time entries');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
-		$date = new DateTimeImmutable($input->getArgument('date'));
+		$filename = $input->getArgument('filename');
 		$dryRun = $input->getOption('dry-run');
 
-		$this->bus->handle(new ImportCSVToTimesheetCommand($date, $dryRun));
+		if (!file_exists($filename)) {
+			throw new \LogicException('file not found');
+		}
+
+		$this->bus->handle(new ImportCSVToTimesheetCommand($dryRun, $filename));
 
 		return 0;
 	}

@@ -5,23 +5,23 @@ namespace App\Infrastructure\Messaging\Command;
 use DateTimeImmutable;
 
 final class ImportCSVToTimesheetCommand {
-	private DateTimeImmutable $date;
-
 	private bool $dryRun;
 
-	public function __construct(
-		DateTimeImmutable $date,
-		bool $dryRun
-	) {
-		$this->date = $date;
-		$this->dryRun = $dryRun;
-	}
+	private string $filename;
 
-	public function date(): DateTimeImmutable {
-		return $this->date;
+	public function __construct(
+		bool $dryRun,
+		string $filename
+	) {
+		$this->dryRun = $dryRun;
+		$this->filename = $filename;
 	}
 
 	public function dryRun(): bool {
 		return $this->dryRun;
+	}
+
+	public function filename(): string {
+		return $this->filename;
 	}
 }

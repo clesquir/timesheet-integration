@@ -14,7 +14,7 @@ final class ImportCSVToTimesheetHandler implements MessageHandlerInterface {
 	}
 
 	public function __invoke(ImportCSVToTimesheetCommand $command) {
-		$entries = $this->bus->handle(new FetchCSVTimeEntriesQuery($command->date()));
-		$this->bus->handle(new ImportCSVToTimesheetCommand($entries, $command->dryRun()));
+		$entries = $this->bus->handle(new FetchCSVTimeEntriesQuery($command->filename()));
+		$this->bus->handle(new ImportTimeEntriesToTimesheetCommand($entries, $command->dryRun()));
 	}
 }

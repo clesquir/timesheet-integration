@@ -38,14 +38,9 @@ final class FetchCSVTimeEntriesHandler implements MessageHandlerInterface {
 	}
 
 	public function __invoke(FetchCSVTimeEntriesQuery $query): array {
-		$date = $query->date();
-		$rangeStart = new DateTime($date->format('Y-m-d 00:00:00'), new DateTimeZone('America/New_York'));
-		$rangeStart->setTimezone(new DateTimeZone('UTC'));
-		$rangeEnd = new DateTime($date->format('Y-m-d 23:59:59'), new DateTimeZone('America/New_York'));
-		$rangeEnd->setTimezone(new DateTimeZone('UTC'));
+		$filename = $query->filename();
 
-		$filename = 'test.json';
-		$string = file_get_contents("test.json");
+		$string = file_get_contents($filename);
 		$content = json_decode($string, true);
 
 		$timeEntries = [];

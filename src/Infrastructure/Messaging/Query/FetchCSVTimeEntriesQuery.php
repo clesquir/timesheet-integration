@@ -5,13 +5,13 @@ namespace App\Infrastructure\Messaging\Query;
 use DateTimeImmutable;
 
 final class FetchCSVTimeEntriesQuery {
-	private DateTimeImmutable $date;
+	private string $filename;
 
-	public function __construct(DateTimeImmutable $date) {
-		$this->date = $date;
+	public function __construct(string $filename) {
+		$this->filename = $filename;
 	}
 
-	public function date(): DateTimeImmutable {
-		return $this->date;
+	public function filename() : string {
+		return $this->filename;
 	}
 }
