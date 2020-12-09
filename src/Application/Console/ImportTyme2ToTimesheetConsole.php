@@ -3,16 +3,14 @@
 namespace App\Application\Console;
 
 use App\Domain\Messaging\Bus;
-use App\Infrastructure\Messaging\Command\ImportCSVToTimesheetCommand;
-use App\Infrastructure\Messaging\Command\ImportTimeularToTimesheetCommand;
-use DateTimeImmutable;
+use App\Infrastructure\Messaging\Command\ImportTyme2ToTimesheetCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class ImportCSVToTimesheetConsole extends Command {
+final class ImportTyme2ToTimesheetConsole extends Command {
 	private Bus $bus;
 
 	public function __construct(Bus $bus) {
@@ -21,9 +19,9 @@ final class ImportCSVToTimesheetConsole extends Command {
 	}
 
 	protected function configure() {
-		$this->setName('app:import:csv-to-timesheet')
+		$this->setName('app:import:tyme2-to-timesheet')
 			->setDescription('Import Tyme2 entries to Timesheet.')
-			->addArgument('filename', InputArgument::REQUIRED, 'filename to import')
+			->addArgument('filename', InputArgument::REQUIRED, 'Filename to import')
 			->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not import time entries');
 	}
 
@@ -32,10 +30,10 @@ final class ImportCSVToTimesheetConsole extends Command {
 		$dryRun = $input->getOption('dry-run');
 
 		if (!file_exists($filename)) {
-			throw new \LogicException('file not found');
+			throw new \LogicException('File not found');
 		}
 
-		$this->bus->handle(new ImportCSVToTimesheetCommand($dryRun, $filename));
+		$this->bus->handle(new ImportTyme2ToTimesheetCommand($dryRun, $filename));
 
 		return 0;
 	}

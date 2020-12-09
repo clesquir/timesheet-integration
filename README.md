@@ -42,6 +42,16 @@ To get the list of Timesheet activities, execute this command:
 
 `docker-compose run app bash -c "console app:import:timeular-to-timesheet -v 2020-01-01"`
 
+# Import entry from Tyme2
+
+## Check what would be imported
+
+`docker-compose run app bash -c "console app:import:tyme2-to-timesheet -v --dry-run JSON_FILENAME"`
+
+## Import
+
+`docker-compose run app bash -c "console app:import:tyme2-to-timesheet -v JSON_FILENAME"`
+
 # Run tests
 
 `docker-compose run --rm app vendor/phpunit/phpunit/phpunit`

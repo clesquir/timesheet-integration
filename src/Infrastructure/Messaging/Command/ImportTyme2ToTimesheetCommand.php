@@ -2,9 +2,7 @@
 
 namespace App\Infrastructure\Messaging\Command;
 
-use DateTimeImmutable;
-
-final class ImportCSVToTimesheetCommand {
+final class ImportTyme2ToTimesheetCommand {
 	private bool $dryRun;
 
 	private string $filename;
