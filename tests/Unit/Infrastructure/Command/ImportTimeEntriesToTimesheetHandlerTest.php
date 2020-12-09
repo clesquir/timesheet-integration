@@ -46,7 +46,7 @@ final class ImportTimeEntriesToTimesheetHandlerTest extends TestCase {
 						return new MockResponse('[]');
 					}
 				],
-				ImportTimeEntriesToTimesheetHandler::BASE_URL
+				TimesheetVault::BASE_URL
 			),
 			TimesheetVault::fixture(),
 			new NullLogger()
@@ -57,6 +57,7 @@ final class ImportTimeEntriesToTimesheetHandlerTest extends TestCase {
 				$timeEntry2 = TimeEntry::fixtureWithStartedAtStoppedAt(new \DateTimeImmutable('2020-01-01'), new \DateTimeImmutable('2020-01-01')),
 				$timeEntry3 = TimeEntry::fixtureWithStartedAtStoppedAt(new \DateTimeImmutable('2020-02-01'), new \DateTimeImmutable('2020-02-01')),
 			],
+			false,
 			false
 		));
 

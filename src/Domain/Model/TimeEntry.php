@@ -72,6 +72,29 @@ final class TimeEntry {
 		);
 	}
 
+	public static function fromTyme2Array(array $timeEntry, int $timesheetActivityId): self {
+		$startedAt = new DateTime($timeEntry['timeStart'], new DateTimeZone('UTC'));
+		$startedAt->setTimezone(new DateTimeZone('America/New_York'));
+		$stoppedAt = new DateTime($timeEntry['timeEnd'], new DateTimeZone('UTC'));
+		$stoppedAt->setTimezone(new DateTimeZone('America/New_York'));
+
+		$note = $timeEntry['notes'];
+		preg_match('/^(.*) - .*/', $timeEntry['subtask'], $matches);
+
+		$issue = "";
+		if (count($matches) >= 2) {
+			$issue = $matches[1];
+		}
+
+		return new self(
+			DateTimeImmutable::createFromMutable($startedAt),
+			DateTimeImmutable::createFromMutable($stoppedAt),
+			$timesheetActivityId,
+			$note,
+			$issue
+		);
+	}
+
 	public static function fixtureWithStartedAtStoppedAt(DateTimeImmutable $startedAt, DateTimeImmutable $stoppedAt) {
 		return new self(
 			$startedAt,

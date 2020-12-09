@@ -36,11 +36,21 @@ To get the list of Timesheet activities, execute this command:
 
 ## Check what would be imported
 
-`docker-compose run app bash -c "console app:import:timeular-to-timesheet -v --dry-run 2020-01-01"`
+`docker-compose run app bash -c "console app:import:timeular-to-timesheet -t -v --dry-run 2020-01-01"`
 
 ## Import
 
-`docker-compose run app bash -c "console app:import:timeular-to-timesheet -v 2020-01-01"`
+`docker-compose run app bash -c "console app:import:timeular-to-timesheet -t -v 2020-01-01"`
+
+# Import entry from Tyme2
+
+## Check what would be imported
+
+`docker-compose run app bash -c "console app:import:tyme2-to-timesheet -v --dry-run JSON_FILENAME"`
+
+## Import
+
+`docker-compose run app bash -c "console app:import:tyme2-to-timesheet -v JSON_FILENAME"`
 
 # Run tests
 

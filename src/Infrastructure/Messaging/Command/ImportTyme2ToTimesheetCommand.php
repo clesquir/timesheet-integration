@@ -2,28 +2,25 @@
 
 namespace App\Infrastructure\Messaging\Command;
 
-use App\Domain\Model\TimeEntry;
-
-final class ImportTimeEntriesToTimesheetCommand {
-	/** @var TimeEntry[] */
-	private array $timeEntries;
+final class ImportTyme2ToTimesheetCommand {
+	private string $filename;
 
 	private bool $addTimeToDescription;
 
 	private bool $dryRun;
 
 	public function __construct(
-		array $timeEntries,
+		string $filename,
 		bool $addTimeToDescription,
 		bool $dryRun
 	) {
-		$this->timeEntries = $timeEntries;
+		$this->filename = $filename;
 		$this->addTimeToDescription = $addTimeToDescription;
 		$this->dryRun = $dryRun;
 	}
 
-	public function timeEntries(): array {
-		return $this->timeEntries;
+	public function filename(): string {
+		return $this->filename;
 	}
 
 	public function addTimeToDescription(): bool {
