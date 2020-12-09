@@ -8,17 +8,17 @@ final class ImportTimeEntriesToTimesheetCommand {
 	/** @var TimeEntry[] */
 	private array $timeEntries;
 
-	private bool $addTimeToDescription;
+	private bool $noComment;
 
 	private bool $dryRun;
 
 	public function __construct(
 		array $timeEntries,
-		bool $addTimeToDescription,
+		bool $noComment,
 		bool $dryRun
 	) {
 		$this->timeEntries = $timeEntries;
-		$this->addTimeToDescription = $addTimeToDescription;
+		$this->noComment = $noComment;
 		$this->dryRun = $dryRun;
 	}
 
@@ -26,8 +26,8 @@ final class ImportTimeEntriesToTimesheetCommand {
 		return $this->timeEntries;
 	}
 
-	public function addTimeToDescription(): bool {
-		return $this->addTimeToDescription;
+	public function noComment(): bool {
+		return $this->noComment;
 	}
 
 	public function dryRun(): bool {

@@ -7,17 +7,17 @@ use DateTimeImmutable;
 final class ImportTimeularToTimesheetCommand {
 	private DateTimeImmutable $date;
 
-	private bool $addTimeToDescription;
+	private bool $noComment;
 
 	private bool $dryRun;
 
 	public function __construct(
 		DateTimeImmutable $date,
-		bool $addTimeToDescription,
+		bool $noComment,
 		bool $dryRun
 	) {
 		$this->date = $date;
-		$this->addTimeToDescription = $addTimeToDescription;
+		$this->noComment = $noComment;
 		$this->dryRun = $dryRun;
 	}
 
@@ -25,8 +25,8 @@ final class ImportTimeularToTimesheetCommand {
 		return $this->date;
 	}
 
-	public function addTimeToDescription(): bool {
-		return $this->addTimeToDescription;
+	public function noComment(): bool {
+		return $this->noComment;
 	}
 
 	public function dryRun(): bool {

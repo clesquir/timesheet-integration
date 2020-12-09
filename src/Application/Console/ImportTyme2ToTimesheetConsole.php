@@ -22,20 +22,20 @@ final class ImportTyme2ToTimesheetConsole extends Command {
 		$this->setName('app:import:tyme2-to-timesheet')
 			->setDescription('Import Tyme2 entries to Timesheet.')
 			->addArgument('filename', InputArgument::REQUIRED, 'Filename to import')
-			->addOption('add-time-to-description', 't', InputOption::VALUE_NONE, 'Add time to description')
+			->addOption('no-comment', null, InputOption::VALUE_NONE, 'Do not add comments')
 			->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not import time entries');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$filename = $input->getArgument('filename');
-		$addTimeToDescription = $input->getOption('add-time-to-description');
+		$noComment = $input->getOption('no-comment');
 		$dryRun = $input->getOption('dry-run');
 
 		if (!file_exists($filename)) {
 			throw new \LogicException('File not found');
 		}
 
-		$this->bus->handle(new ImportTyme2ToTimesheetCommand($filename, $addTimeToDescription, $dryRun));
+		$this->bus->handle(new ImportTyme2ToTimesheetCommand($filename, $noComment, $dryRun));
 
 		return 0;
 	}

@@ -5,17 +5,17 @@ namespace App\Infrastructure\Messaging\Command;
 final class ImportTyme2ToTimesheetCommand {
 	private string $filename;
 
-	private bool $addTimeToDescription;
+	private bool $noComment;
 
 	private bool $dryRun;
 
 	public function __construct(
 		string $filename,
-		bool $addTimeToDescription,
+		bool $noComment,
 		bool $dryRun
 	) {
 		$this->filename = $filename;
-		$this->addTimeToDescription = $addTimeToDescription;
+		$this->noComment = $noComment;
 		$this->dryRun = $dryRun;
 	}
 
@@ -23,8 +23,8 @@ final class ImportTyme2ToTimesheetCommand {
 		return $this->filename;
 	}
 
-	public function addTimeToDescription(): bool {
-		return $this->addTimeToDescription;
+	public function noComment(): bool {
+		return $this->noComment;
 	}
 
 	public function dryRun(): bool {
