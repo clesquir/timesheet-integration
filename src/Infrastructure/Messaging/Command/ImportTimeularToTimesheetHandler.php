@@ -15,6 +15,6 @@ final class ImportTimeularToTimesheetHandler implements MessageHandlerInterface 
 
 	public function __invoke(ImportTimeularToTimesheetCommand $command) {
 		$entries = $this->bus->handle(new FetchTimeularTimeEntriesQuery($command->date()));
-		$this->bus->handle(new ImportTimeEntriesToTimesheetCommand($entries, $command->dryRun()));
+		$this->bus->handle(new ImportTimeEntriesToTimesheetCommand($entries, $command->addTimeToDescription(), $command->dryRun()));
 	}
 }

@@ -3,23 +3,31 @@
 namespace App\Infrastructure\Messaging\Command;
 
 final class ImportTyme2ToTimesheetCommand {
-	private bool $dryRun;
-
 	private string $filename;
 
-	public function __construct(
-		bool $dryRun,
-		string $filename
-	) {
-		$this->dryRun = $dryRun;
-		$this->filename = $filename;
-	}
+	private bool $addTimeToDescription;
 
-	public function dryRun(): bool {
-		return $this->dryRun;
+	private bool $dryRun;
+
+	public function __construct(
+		string $filename,
+		bool $addTimeToDescription,
+		bool $dryRun
+	) {
+		$this->filename = $filename;
+		$this->addTimeToDescription = $addTimeToDescription;
+		$this->dryRun = $dryRun;
 	}
 
 	public function filename(): string {
 		return $this->filename;
+	}
+
+	public function addTimeToDescription(): bool {
+		return $this->addTimeToDescription;
+	}
+
+	public function dryRun(): bool {
+		return $this->dryRun;
 	}
 }

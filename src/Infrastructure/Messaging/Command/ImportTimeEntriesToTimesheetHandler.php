@@ -61,10 +61,13 @@ final class ImportTimeEntriesToTimesheetHandler implements MessageHandlerInterfa
 				$sumMinutes = $sumMinutes - 60;
 			}
 
-			$taskDescription = $timeEntry->description() .
-				TimeEntry::TIME_SEPARATOR .
-				$startedAt->format('H') . 'H' . $startedAt->format('i') . ' - ' .
-				$stoppedAt->format('H') . 'H' . $stoppedAt->format('i');
+			$taskDescription = $timeEntry->description();
+
+			if ($command->addTimeToDescription()) {
+				$taskDescription .= TimeEntry::TIME_SEPARATOR .
+					$startedAt->format('H') . 'H' . $startedAt->format('i') . ' - ' .
+					$stoppedAt->format('H') . 'H' . $stoppedAt->format('i');
+			}
 
 			$parameters = [
 				'work_date' => $timeEntry->startedAt()->format('Y-m-d'),

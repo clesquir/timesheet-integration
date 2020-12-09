@@ -23,14 +23,16 @@ final class ImportTimeularToTimesheetConsole extends Command {
 		$this->setName('app:import:timeular-to-timesheet')
 			->setDescription('Import Timeular entries to Timesheet.')
 			->addArgument('date', InputArgument::REQUIRED, 'Date to import')
+			->addOption('add-time-to-description', 't', InputOption::VALUE_NONE, 'Add time to description')
 			->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not import time entries');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output) {
 		$date = new DateTimeImmutable($input->getArgument('date'));
+		$addTimeToDescription = $input->getOption('add-time-to-description');
 		$dryRun = $input->getOption('dry-run');
 
-		$this->bus->handle(new ImportTimeularToTimesheetCommand($date, $dryRun));
+		$this->bus->handle(new ImportTimeularToTimesheetCommand($date, $addTimeToDescription, $dryRun));
 
 		return 0;
 	}

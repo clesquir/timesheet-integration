@@ -15,6 +15,6 @@ final class ImportTyme2ToTimesheetHandler implements MessageHandlerInterface {
 
 	public function __invoke(ImportTyme2ToTimesheetCommand $command) {
 		$entries = $this->bus->handle(new FetchTyme2TimeEntriesQuery($command->filename()));
-		$this->bus->handle(new ImportTimeEntriesToTimesheetCommand($entries, $command->dryRun()));
+		$this->bus->handle(new ImportTimeEntriesToTimesheetCommand($entries, $command->addTimeToDescription(), $command->dryRun()));
 	}
 }
