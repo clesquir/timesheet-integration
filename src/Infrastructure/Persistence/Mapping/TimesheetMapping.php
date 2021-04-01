@@ -2,21 +2,15 @@
 
 namespace App\Infrastructure\Persistence\Mapping;
 
-use Psr\Log\LoggerInterface;
-
 final class TimesheetMapping {
 	const TIMESHEET_OTHER = 42;
 
 	private array $timesheetMapping;
 
-	private LoggerInterface $logger;
-
 	public function __construct(
-		array $timesheetMappingParameter,
-		LoggerInterface $logger
+		array $timesheetMappingParameter
 	) {
 		$this->timesheetMapping = $timesheetMappingParameter;
-		$this->logger = $logger;
 	}
 
 	public function exists(int $externalActivityId): bool {
@@ -28,9 +22,8 @@ final class TimesheetMapping {
 	}
 
 	public static function fromMapping(
-		array $mapping,
-		LoggerInterface $logger
+		array $mapping
 	): self {
-		return new self($mapping, $logger);
+		return new self($mapping);
 	}
 }

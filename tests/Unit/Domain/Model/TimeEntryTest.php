@@ -8,7 +8,6 @@ use DateTime;
 use DateTimeImmutable;
 use DateTimeZone;
 use PHPUnit\Framework\TestCase;
-use Psr\Log\NullLogger;
 
 final class TimeEntryTest extends TestCase {
 	public function test_it_creates_time_entry_from_timeular() {
@@ -16,8 +15,7 @@ final class TimeEntryTest extends TestCase {
 		$stoppedAt = (new DateTime('now', new DateTimeZone('UTC')))->setTimestamp(mt_rand());
 
 		$timesheetMapping = TimesheetMapping::fromMapping(
-			[$timeularActivity = mt_rand() => $timesheetActivity = mt_rand()],
-			new NullLogger()
+			[$timeularActivity = mt_rand() => $timesheetActivity = mt_rand()]
 		);
 		$timeEntry = TimeEntry::fromTimeularArray(
 			[
@@ -61,7 +59,7 @@ final class TimeEntryTest extends TestCase {
 				],
 				'activityId' => mt_rand(),
 			],
-			TimesheetMapping::fromMapping([], new NullLogger())
+			TimesheetMapping::fromMapping([])
 		);
 		self::assertSame($textNote, $timeEntry->description());
 		self::assertSame($issue, $timeEntry->issue());
@@ -79,7 +77,7 @@ final class TimeEntryTest extends TestCase {
 				],
 				'activityId' => mt_rand(),
 			],
-			TimesheetMapping::fromMapping([], new NullLogger())
+			TimesheetMapping::fromMapping([])
 		);
 		self::assertSame(TimesheetMapping::TIMESHEET_OTHER, $timeEntry->activityId());
 	}

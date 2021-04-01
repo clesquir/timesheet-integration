@@ -59,7 +59,7 @@ final class FetchTimeularTimeEntriesHandlerTest extends TestCase {
 					)),
 				]
 			),
-			TimesheetMapping::fromMapping([], new NullLogger()),
+			TimesheetMapping::fromMapping([]),
 			TimeularVault::fixture(),
 			new NullLogger()
 		);
@@ -69,11 +69,11 @@ final class FetchTimeularTimeEntriesHandlerTest extends TestCase {
 		self::assertCount(2, $resultEntries);
 		/** @var TimeEntry $resultEntry */
 		$resultEntry = $resultEntries[0];
-		$requestEntry = TimeEntry::fromTimeularArray($entry1, TimesheetMapping::fromMapping([], new NullLogger()));
+		$requestEntry = TimeEntry::fromTimeularArray($entry1, TimesheetMapping::fromMapping([]));
 		$this->assertTimeEntry($requestEntry, $resultEntry);
 
 		$resultEntry = $resultEntries[1];
-		$requestEntry = TimeEntry::fromTimeularArray($entry2, TimesheetMapping::fromMapping([], new NullLogger()));
+		$requestEntry = TimeEntry::fromTimeularArray($entry2, TimesheetMapping::fromMapping([]));
 		$this->assertTimeEntry($requestEntry, $resultEntry);
 	}
 
