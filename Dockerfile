@@ -1,6 +1,6 @@
 FROM php:7.4-apache AS base
 
-ADD https://raw.githubusercontent.com/mlocati/docker-php-extension-installer/master/install-php-extensions /usr/local/bin/
+ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN apt-get update && apt-get install -y \
         libicu-dev \
         zlib1g-dev \
