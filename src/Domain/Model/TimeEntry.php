@@ -79,7 +79,7 @@ final class TimeEntry {
 		$stoppedAt->setTimezone(new DateTimeZone('America/New_York'));
 
 		$note = $timeEntry['notes'];
-		preg_match('/^(.*) - .*/', $timeEntry['subtask'], $matches);
+		preg_match('/^(\S*) - .*/', $timeEntry['subtask'], $matches);
 
 		$issue = "";
 		if (count($matches) >= 2) {
