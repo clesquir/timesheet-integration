@@ -50,6 +50,10 @@ final class TimeEntry {
 		return $this->description;
 	}
 
+	public function escapedDescription(): string {
+		return preg_replace_callback('/([<>=?])/', function($matches) {return urlencode($matches[1]);}, $this->description);
+	}
+
 	public function issue(): string {
 		return $this->issue;
 	}

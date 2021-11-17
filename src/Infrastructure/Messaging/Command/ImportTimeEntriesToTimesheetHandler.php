@@ -63,7 +63,7 @@ final class ImportTimeEntriesToTimesheetHandler implements MessageHandlerInterfa
 
 			$taskDescription = '';
 			if ($command->noComment() === false) {
-				$taskDescription = $timeEntry->description() . TimeEntry::TIME_SEPARATOR .
+				$taskDescription = $timeEntry->escapedDescription() . TimeEntry::TIME_SEPARATOR .
 					$startedAt->format('H') . 'H' . $startedAt->format('i') . ' - ' .
 					$stoppedAt->format('H') . 'H' . $stoppedAt->format('i');
 			}
