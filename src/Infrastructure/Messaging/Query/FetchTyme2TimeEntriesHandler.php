@@ -34,8 +34,8 @@ final class FetchTyme2TimeEntriesHandler implements MessageHandlerInterface {
 		foreach ($content['timed'] as $timeEntry) {
 			$activityId = explode(' | ', $timeEntry['project'])[0];
 
-			if ($timesheetMapping->exists($activityId) === false) {
-				$this->logger->warning("The activity {$activityId} is not mapped with Timesheet. It will be imported in 'Other'");
+			if (!is_numeric($activityId) || $timesheetMapping->exists($activityId) === false) {
+				$this->logger->warning("The activity '$activityId' is not mapped with Timesheet. It will be imported in 'Other'");
 				$activityId = TimesheetMapping::TIMESHEET_OTHER;
 			}
 
