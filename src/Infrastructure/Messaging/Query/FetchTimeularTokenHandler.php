@@ -3,20 +3,15 @@
 namespace App\Infrastructure\Messaging\Query;
 
 use App\Infrastructure\Persistence\Vault\TimeularVault;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class FetchTimeularTokenHandler implements MessageHandlerInterface {
-	private HttpClientInterface $client;
-
-	private TimeularVault $timeularVault;
-
+#[AsMessageHandler]
+final class FetchTimeularTokenHandler {
 	public function __construct(
-		HttpClientInterface $client,
-		TimeularVault $timeularVault
+		private readonly HttpClientInterface $client,
+		private readonly TimeularVault $timeularVault
 	) {
-		$this->client = $client;
-		$this->timeularVault = $timeularVault;
 	}
 
 	public function __invoke(FetchTimeularTokenQuery $query): string {

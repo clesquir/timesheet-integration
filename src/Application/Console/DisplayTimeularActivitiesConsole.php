@@ -11,19 +11,18 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class DisplayTimeularActivitiesConsole extends Command {
-	private Bus $bus;
-
-	public function __construct(Bus $bus) {
+	public function __construct(
+		private readonly Bus $bus
+	) {
 		parent::__construct();
-		$this->bus = $bus;
 	}
 
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('app:activities:timeular:display')
 			->setDescription('Displays Timeular activities.');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$tbl = new Table($output);
 
 		$tbl->setHeaders(

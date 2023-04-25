@@ -1,4 +1,4 @@
-FROM php:7.4-apache AS base
+FROM php:8.2-apache AS base
 
 ADD https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions /usr/local/bin/
 RUN apt-get update && apt-get install -y \
@@ -10,11 +10,13 @@ RUN apt-get update && apt-get install -y \
         acl \
         libzip-dev \
         libmemcached-tools \
-    && chmod +x /usr/local/bin/install-php-extensions \
-    && install-php-extensions \
-        zip \
-        intl \
-    && pecl install xdebug \
+    && chmod +x /usr/local/bin/install-php-extensions
+
+RUN install-php-extensions \
+    zip \
+    intl
+
+RUN pecl install xdebug \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

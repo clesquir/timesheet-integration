@@ -46,11 +46,11 @@ final class TimeEntryTest extends TestCase {
 		$timeEntry = TimeEntry::fromTimeularArray(
 			[
 				'duration' => [
-					'startedAt' => $startedAt = (new DateTimeImmutable())->setTimestamp(mt_rand())->format('Y-m-d H:i:s.u'),
-					'stoppedAt' => $stoppeddAt = (new DateTimeImmutable())->setTimestamp(mt_rand())->format('Y-m-d H:i:s.u'),
+					'startedAt' => (new DateTimeImmutable())->setTimestamp(mt_rand())->format('Y-m-d H:i:s.u'),
+					'stoppedAt' => (new DateTimeImmutable())->setTimestamp(mt_rand())->format('Y-m-d H:i:s.u'),
 				],
 				'note' => [
-					'text' => $note = '<{{|t|' . mt_rand() . '|}}>' . $textNote . '<{{|t|' . mt_rand() . '|}}>',
+					'text' => '<{{|t|' . mt_rand() . '|}}>' . $textNote . '<{{|t|' . mt_rand() . '|}}>',
 					'tags' => [
 						[
 							'label' => $issue = uniqid(),
@@ -69,11 +69,11 @@ final class TimeEntryTest extends TestCase {
 		$timeEntry = TimeEntry::fromTimeularArray(
 			[
 				'duration' => [
-					'startedAt' => $startedAt = (new DateTimeImmutable())->setTimestamp(mt_rand())->format('Y-m-d H:i:s.u'),
-					'stoppedAt' => $stoppeddAt = (new DateTimeImmutable())->setTimestamp(mt_rand())->format('Y-m-d H:i:s.u'),
+					'startedAt' => (new DateTimeImmutable())->setTimestamp(mt_rand())->format('Y-m-d H:i:s.u'),
+					'stoppedAt' => (new DateTimeImmutable())->setTimestamp(mt_rand())->format('Y-m-d H:i:s.u'),
 				],
 				'note' => [
-					'text' => $note = uniqid(),
+					'text' => uniqid(),
 				],
 				'activityId' => mt_rand(),
 			],

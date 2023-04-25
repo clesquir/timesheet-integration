@@ -4,16 +4,17 @@ namespace App\Infrastructure\Messaging\Command;
 
 use App\Domain\Messaging\Bus;
 use App\Infrastructure\Messaging\Query\FetchTimeularTimeEntriesQuery;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class ImportTimeularToTimesheetHandler implements MessageHandlerInterface {
+#[AsMessageHandler]
+final class ImportTimeularToTimesheetHandler {
 	private Bus $bus;
 
 	public function __construct(Bus $bus) {
 		$this->bus = $bus;
 	}
 
-	public function __invoke(ImportTimeularToTimesheetCommand $command) {
+	public function __invoke(ImportTimeularToTimesheetCommand $command): void {
 		$entries = $this->bus->handle(new FetchTimeularTimeEntriesQuery($command->date()));
 		$this->bus->handle(new ImportTimeEntriesToTimesheetCommand($entries, $command->noComment(), $command->dryRun()));
 	}

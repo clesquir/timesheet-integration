@@ -3,5 +3,5 @@
 namespace App\Domain\Messaging;
 
 interface Bus {
-	public function handle($message);
+	public function handle(mixed $message): mixed;
 } 

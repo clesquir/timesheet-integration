@@ -4,16 +4,16 @@ namespace App\Infrastructure\Messaging\Command;
 
 use App\Domain\Messaging\Bus;
 use App\Infrastructure\Messaging\Query\FetchTyme2TimeEntriesQuery;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class ImportTyme2ToTimesheetHandler implements MessageHandlerInterface {
-	private Bus $bus;
-
-	public function __construct(Bus $bus) {
-		$this->bus = $bus;
+#[AsMessageHandler]
+final class ImportTyme2ToTimesheetHandler {
+	public function __construct(
+		private readonly Bus $bus
+	) {
 	}
 
-	public function __invoke(ImportTyme2ToTimesheetCommand $command) {
+	public function __invoke(ImportTyme2ToTimesheetCommand $command): void {
 		$entries = $this->bus->handle(new FetchTyme2TimeEntriesQuery($command->filename()));
 		$this->bus->handle(new ImportTimeEntriesToTimesheetCommand($entries, $command->noComment(), $command->dryRun()));
 	}

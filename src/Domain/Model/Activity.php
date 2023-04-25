@@ -3,13 +3,10 @@
 namespace App\Domain\Model;
 
 final class Activity {
-	private int $id;
-
-	private string $name;
-
-	private function __construct(int $id, string $name) {
-		$this->id = $id;
-		$this->name = $name;
+	private function __construct(
+		private readonly int $id,
+		private readonly string $name
+	) {
 	}
 
 	public function id(): int {
@@ -20,7 +17,7 @@ final class Activity {
 		return $this->name;
 	}
 
-	public static function create(int $id, string $name) {
+	public static function create(int $id, string $name): self {
 		return new self($id, $name);
 	}
 }

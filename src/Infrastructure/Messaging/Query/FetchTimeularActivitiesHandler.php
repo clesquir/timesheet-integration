@@ -4,25 +4,15 @@ namespace App\Infrastructure\Messaging\Query;
 
 use App\Domain\Messaging\Bus;
 use App\Domain\Model\Activity;
-use App\Infrastructure\Persistence\Vault\TimeularVault;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class FetchTimeularActivitiesHandler implements MessageHandlerInterface {
-	private Bus $bus;
-
-	private HttpClientInterface $client;
-
-	private TimeularVault $timeularVault;
-
+#[AsMessageHandler]
+final class FetchTimeularActivitiesHandler {
 	public function __construct(
-		Bus $bus,
-		HttpClientInterface $client,
-		TimeularVault $timeularVault
+		private readonly Bus $bus,
+		private readonly HttpClientInterface $client
 	) {
-		$this->bus = $bus;
-		$this->client = $client;
-		$this->timeularVault = $timeularVault;
 	}
 
 	public function __invoke(FetchTimeularActivitiesQuery $query): array {

@@ -8,7 +8,6 @@ use App\Infrastructure\Messaging\Query\FetchTimeularTimeEntriesHandler;
 use App\Infrastructure\Messaging\Query\FetchTimeularTimeEntriesQuery;
 use App\Infrastructure\Messaging\Query\FetchTimeularTokenQuery;
 use App\Infrastructure\Persistence\Mapping\TimesheetMapping;
-use App\Infrastructure\Persistence\Vault\TimeularVault;
 use App\Tests\Collaborator\Infrastructure\Messaging\TestBus;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
@@ -29,7 +28,7 @@ final class FetchTimeularTimeEntriesHandlerTest extends TestCase {
 
 		$handler = new FetchTimeularTimeEntriesHandler(
 			$bus,
-			$client = new MockHttpClient(
+			new MockHttpClient(
 				[
 					new MockResponse(json_encode(
 						[
@@ -60,7 +59,6 @@ final class FetchTimeularTimeEntriesHandlerTest extends TestCase {
 				]
 			),
 			TimesheetMapping::fromMapping([]),
-			TimeularVault::fixture(),
 			new NullLogger()
 		);
 		$date = (new DateTimeImmutable())->setTimestamp(mt_rand());
@@ -77,7 +75,7 @@ final class FetchTimeularTimeEntriesHandlerTest extends TestCase {
 		$this->assertTimeEntry($requestEntry, $resultEntry);
 	}
 
-	private function assertTimeEntry(TimeEntry $requestEntry, TimeEntry $resultEntry) {
+	private function assertTimeEntry(TimeEntry $requestEntry, TimeEntry $resultEntry): void {
 		self::assertSame($requestEntry->startedAt()->format('Y-m-d H:i'), $resultEntry->startedAt()->format('Y-m-d H:i'));
 		self::assertSame($requestEntry->stoppedAt()->format('Y-m-d H:i'), $resultEntry->stoppedAt()->format('Y-m-d H:i'));
 		self::assertSame($requestEntry->activityId(), $resultEntry->activityId());

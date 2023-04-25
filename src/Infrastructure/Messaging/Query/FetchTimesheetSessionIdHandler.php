@@ -4,20 +4,15 @@ namespace App\Infrastructure\Messaging\Query;
 
 use App\Infrastructure\Persistence\Vault\TimesheetVault;
 use Symfony\Component\BrowserKit\HttpBrowser;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class FetchTimesheetSessionIdHandler implements MessageHandlerInterface {
-	private HttpClientInterface $client;
-
-	private TimesheetVault $timesheetVault;
-
+#[AsMessageHandler]
+final class FetchTimesheetSessionIdHandler {
 	public function __construct(
-		HttpClientInterface $client,
-		TimesheetVault $timesheetVault
+		private readonly HttpClientInterface $client,
+		private readonly TimesheetVault $timesheetVault
 	) {
-		$this->client = $client;
-		$this->timesheetVault = $timesheetVault;
 	}
 
 	public function __invoke(FetchTimesheetSessionIdQuery $query): string {

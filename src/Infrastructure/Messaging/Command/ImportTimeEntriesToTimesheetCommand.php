@@ -5,23 +5,16 @@ namespace App\Infrastructure\Messaging\Command;
 use App\Domain\Model\TimeEntry;
 
 final class ImportTimeEntriesToTimesheetCommand {
-	/** @var TimeEntry[] */
-	private array $timeEntries;
-
-	private bool $noComment;
-
-	private bool $dryRun;
-
 	public function __construct(
-		array $timeEntries,
-		bool $noComment,
-		bool $dryRun
+		private readonly array $timeEntries,
+		private readonly bool $noComment,
+		private readonly bool $dryRun
 	) {
-		$this->timeEntries = $timeEntries;
-		$this->noComment = $noComment;
-		$this->dryRun = $dryRun;
 	}
 
+	/**
+	 * @return TimeEntry[]
+	 */
 	public function timeEntries(): array {
 		return $this->timeEntries;
 	}

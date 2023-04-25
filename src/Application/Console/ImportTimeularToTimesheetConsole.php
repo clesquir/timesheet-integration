@@ -12,14 +12,13 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 final class ImportTimeularToTimesheetConsole extends Command {
-	private Bus $bus;
-
-	public function __construct(Bus $bus) {
+	public function __construct(
+		private readonly Bus $bus
+	) {
 		parent::__construct();
-		$this->bus = $bus;
 	}
 
-	protected function configure() {
+	protected function configure(): void {
 		$this->setName('app:import:timeular-to-timesheet')
 			->setDescription('Import Timeular entries to Timesheet.')
 			->addArgument('date', InputArgument::REQUIRED, 'Date to import')
@@ -27,7 +26,7 @@ final class ImportTimeularToTimesheetConsole extends Command {
 			->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not import time entries');
 	}
 
-	protected function execute(InputInterface $input, OutputInterface $output) {
+	protected function execute(InputInterface $input, OutputInterface $output): int {
 		$date = new DateTimeImmutable($input->getArgument('date'));
 		$noComment = $input->getOption('no-comment');
 		$dryRun = $input->getOption('dry-run');

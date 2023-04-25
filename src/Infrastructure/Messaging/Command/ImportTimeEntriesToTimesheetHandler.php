@@ -11,38 +11,26 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\BrowserKit\HttpBrowser;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class ImportTimeEntriesToTimesheetHandler implements MessageHandlerInterface {
-	private Bus $bus;
-
-	private HttpClientInterface $client;
-
-	private TimesheetVault $timesheetVault;
-
-	private LoggerInterface $logger;
-
+#[AsMessageHandler]
+final class ImportTimeEntriesToTimesheetHandler {
 	public function __construct(
-		Bus $bus,
-		HttpClientInterface $client,
-		TimesheetVault $timesheetVault,
-		LoggerInterface $logger
+		private readonly Bus $bus,
+		private readonly HttpClientInterface $client,
+		private readonly LoggerInterface $logger
 	) {
-		$this->bus = $bus;
-		$this->client = $client;
-		$this->timesheetVault = $timesheetVault;
-		$this->logger = $logger;
 	}
 
-	public function __invoke(ImportTimeEntriesToTimesheetCommand $command) {
+	public function __invoke(ImportTimeEntriesToTimesheetCommand $command): void {
 		$phpSession = $this->bus->handle(new FetchTimesheetSessionIdQuery());
 
 		$timeEntries = $command->timeEntries();
 		usort(
 			$timeEntries,
 			function(TimeEntry $timeEntryA, TimeEntry $timeEntryB) {
-				return $timeEntryA->startedAt() > $timeEntryB->startedAt();
+				return $timeEntryA->startedAt() <=> $timeEntryB->startedAt();
 			}
 		);
 
@@ -53,9 +41,9 @@ final class ImportTimeEntriesToTimesheetHandler implements MessageHandlerInterfa
 			$stoppedAt = new DateTime($timeEntry->stoppedAt()->format('Y-m-d H:i'));
 			$diff = date_diff($startedAt, $stoppedAt);
 			$hours = $diff->format('%h');
-			$sumHours += $hours;
+			$sumHours += intval($hours);
 			$minutes = $diff->format('%i');
-			$sumMinutes += $minutes;
+			$sumMinutes += intval($minutes);
 			if ($sumMinutes >= 60) {
 				$sumHours++;
 				$sumMinutes = $sumMinutes - 60;

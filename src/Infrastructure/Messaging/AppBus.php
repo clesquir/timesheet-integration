@@ -9,13 +9,12 @@ use Symfony\Component\Messenger\Stamp\HandledStamp;
 use Webmozart\Assert\Assert;
 
 final class AppBus implements Bus {
-	private MessageBusInterface $messageBus;
-
-	public function __construct(MessageBusInterface $messageBus) {
-		$this->messageBus = $messageBus;
+	public function __construct(
+		private readonly MessageBusInterface $messageBus
+	) {
 	}
 
-	public function handle($message) {
+	public function handle(mixed $message): mixed {
 		try {
 			$envelope = $this->messageBus->dispatch($message);
 		} catch (HandlerFailedException $e) {

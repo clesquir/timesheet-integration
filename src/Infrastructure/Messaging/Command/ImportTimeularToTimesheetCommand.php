@@ -5,20 +5,11 @@ namespace App\Infrastructure\Messaging\Command;
 use DateTimeImmutable;
 
 final class ImportTimeularToTimesheetCommand {
-	private DateTimeImmutable $date;
-
-	private bool $noComment;
-
-	private bool $dryRun;
-
 	public function __construct(
-		DateTimeImmutable $date,
-		bool $noComment,
-		bool $dryRun
+		private readonly DateTimeImmutable $date,
+		private readonly bool $noComment,
+		private readonly bool $dryRun
 	) {
-		$this->date = $date;
-		$this->noComment = $noComment;
-		$this->dryRun = $dryRun;
 	}
 
 	public function date(): DateTimeImmutable {

@@ -7,19 +7,14 @@ use App\Domain\Model\Activity;
 use App\Domain\Model\TimeEntry;
 use App\Infrastructure\Persistence\Mapping\TimesheetMapping;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
-final class FetchTyme2TimeEntriesHandler implements MessageHandlerInterface {
-	private Bus $bus;
-
-	private LoggerInterface $logger;
-
+#[AsMessageHandler]
+final class FetchTyme2TimeEntriesHandler {
 	public function __construct(
-		Bus $bus,
-		LoggerInterface $logger
+		private readonly Bus $bus,
+		private readonly LoggerInterface $logger
 	) {
-		$this->bus = $bus;
-		$this->logger = $logger;
 	}
 
 	public function __invoke(FetchTyme2TimeEntriesQuery $query): array {

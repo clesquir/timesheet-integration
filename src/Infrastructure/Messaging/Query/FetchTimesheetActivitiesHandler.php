@@ -8,24 +8,15 @@ use App\Infrastructure\Persistence\Vault\TimesheetVault;
 use Symfony\Component\BrowserKit\Cookie;
 use Symfony\Component\BrowserKit\CookieJar;
 use Symfony\Component\BrowserKit\HttpBrowser;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class FetchTimesheetActivitiesHandler implements MessageHandlerInterface {
-	private Bus $bus;
-
-	private HttpClientInterface $client;
-
-	private TimesheetVault $timesheetVault;
-
+#[AsMessageHandler]
+final class FetchTimesheetActivitiesHandler {
 	public function __construct(
-		Bus $bus,
-		HttpClientInterface $client,
-		TimesheetVault $timesheetVault
+		private readonly Bus $bus,
+		private readonly HttpClientInterface $client
 	) {
-		$this->bus = $bus;
-		$this->client = $client;
-		$this->timesheetVault = $timesheetVault;
 	}
 
 	public function __invoke(FetchTimesheetActivitiesQuery $query): array {

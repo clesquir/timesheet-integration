@@ -5,36 +5,20 @@ namespace App\Infrastructure\Messaging\Query;
 use App\Domain\Messaging\Bus;
 use App\Domain\Model\TimeEntry;
 use App\Infrastructure\Persistence\Mapping\TimesheetMapping;
-use App\Infrastructure\Persistence\Vault\TimeularVault;
 use DateTime;
 use DateTimeZone;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
-final class FetchTimeularTimeEntriesHandler implements MessageHandlerInterface {
-	private Bus $bus;
-
-	private HttpClientInterface $client;
-
-	private TimesheetMapping $timesheetMapping;
-
-	private TimeularVault $timeularVault;
-
-	private LoggerInterface $logger;
-
+#[AsMessageHandler]
+final class FetchTimeularTimeEntriesHandler {
 	public function __construct(
-		Bus $bus,
-		HttpClientInterface $client,
-		TimesheetMapping $timesheetMapping,
-		TimeularVault $timeularVault,
-		LoggerInterface $logger
+		private readonly Bus $bus,
+		private readonly HttpClientInterface $client,
+		private readonly TimesheetMapping $timesheetMapping,
+		private readonly LoggerInterface $logger
 	) {
-		$this->bus = $bus;
-		$this->client = $client;
-		$this->timesheetMapping = $timesheetMapping;
-		$this->timeularVault = $timeularVault;
-		$this->logger = $logger;
 	}
 
 	public function __invoke(FetchTimeularTimeEntriesQuery $query): array {
