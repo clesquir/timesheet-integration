@@ -8,7 +8,7 @@ use App\Infrastructure\Messaging\Command\ImportTimeEntriesToTimesheetCommand;
 use App\Infrastructure\Messaging\Command\ImportTimeEntriesToTimesheetHandler;
 use App\Infrastructure\Messaging\Query\FetchTimesheetSessionIdQuery;
 use App\Infrastructure\Persistence\Vault\TimesheetVault;
-use App\Tests\Collaborator\Infrastructure\Messaging\TestBus;
+use App\Tests\Collaborator\Infrastructure\Messaging\AlwaysSameHandlerForMessageClass;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
@@ -18,7 +18,7 @@ use Symfony\Component\Messenger\MessageBus;
 
 final class ImportTimeEntriesToTimesheetHandlerTest extends TestCase {
 	public function test_it_adds_entries_to_timesheet_chronologically() {
-		$bus = new TestBus(new AppBus(new MessageBus()));
+		$bus = new AlwaysSameHandlerForMessageClass(new AppBus(new MessageBus()));
 		$bus->replaceHandler(
 			FetchTimesheetSessionIdQuery::class,
 			function() {

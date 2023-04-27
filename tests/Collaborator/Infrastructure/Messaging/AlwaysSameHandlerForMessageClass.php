@@ -5,7 +5,7 @@ namespace App\Tests\Collaborator\Infrastructure\Messaging;
 use App\Domain\Messaging\Bus;
 use Closure;
 
-final class TestBus implements Bus {
+final class AlwaysSameHandlerForMessageClass implements Bus {
 	private array $replaced_handlers;
 
 	public function __construct(
@@ -25,6 +25,7 @@ final class TestBus implements Bus {
 		if (isset($this->replaced_handlers[get_class($message)])) {
 			return call_user_func($this->replaced_handlers[get_class($message)], $message);
 		}
+
 		return $this->bus->handle($message);
 	}
 }

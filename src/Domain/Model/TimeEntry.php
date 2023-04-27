@@ -43,6 +43,22 @@ final class TimeEntry {
 		return $this->issue;
 	}
 
+	public static function create(
+		DateTimeImmutable $startedAt,
+		DateTimeImmutable $stoppedAt,
+		int $activityId,
+		string $description,
+		string $issue
+	): self {
+		return new self(
+			$startedAt,
+			$stoppedAt,
+			$activityId,
+			$description,
+			$issue
+		);
+	}
+
 	public static function fromTimeularArray(array $timeEntry, TimesheetMapping $timesheetMapping): self {
 		$startedAt = new DateTime($timeEntry['duration']['startedAt'], new DateTimeZone('UTC'));
 		$startedAt->setTimezone(new DateTimeZone('America/New_York'));
@@ -52,7 +68,7 @@ final class TimeEntry {
 		$note = preg_replace('/<{{\|t\|[0-9]+\|}}>/', '', $note);
 		$issue = $timeEntry['note']['tags'][0]['label'] ?? '';
 
-		return new self(
+		return self::create(
 			DateTimeImmutable::createFromMutable($startedAt),
 			DateTimeImmutable::createFromMutable($stoppedAt),
 			$timesheetMapping->get($timeEntry['activityId']),
@@ -75,7 +91,7 @@ final class TimeEntry {
 			$issue = $matches[1];
 		}
 
-		return new self(
+		return self::create(
 			DateTimeImmutable::createFromMutable($startedAt),
 			DateTimeImmutable::createFromMutable($stoppedAt),
 			$timesheetActivityId,
@@ -85,7 +101,7 @@ final class TimeEntry {
 	}
 
 	public static function fixtureWithStartedAtStoppedAt(DateTimeImmutable $startedAt, DateTimeImmutable $stoppedAt): self {
-		return new self(
+		return self::create(
 			$startedAt,
 			$stoppedAt,
 			TimesheetMapping::TIMESHEET_OTHER,

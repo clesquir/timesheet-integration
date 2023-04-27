@@ -8,7 +8,7 @@ use App\Infrastructure\Messaging\Query\FetchTimeularTimeEntriesHandler;
 use App\Infrastructure\Messaging\Query\FetchTimeularTimeEntriesQuery;
 use App\Infrastructure\Messaging\Query\FetchTimeularTokenQuery;
 use App\Infrastructure\Persistence\Mapping\TimesheetMapping;
-use App\Tests\Collaborator\Infrastructure\Messaging\TestBus;
+use App\Tests\Collaborator\Infrastructure\Messaging\AlwaysSameHandlerForMessageClass;
 use DateTimeImmutable;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\NullLogger;
@@ -18,7 +18,7 @@ use Symfony\Component\Messenger\MessageBus;
 
 final class FetchTimeularTimeEntriesHandlerTest extends TestCase {
 	public function test_it_returns_time_entries() {
-		$bus = new TestBus(new AppBus(new MessageBus()));
+		$bus = new AlwaysSameHandlerForMessageClass(new AppBus(new MessageBus()));
 		$bus->replaceHandler(
 			FetchTimeularTokenQuery::class,
 			function() {
