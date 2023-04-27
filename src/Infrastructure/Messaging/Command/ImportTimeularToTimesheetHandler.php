@@ -8,10 +8,9 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
 final class ImportTimeularToTimesheetHandler {
-	private Bus $bus;
-
-	public function __construct(Bus $bus) {
-		$this->bus = $bus;
+	public function __construct(
+		private readonly Bus $bus
+	) {
 	}
 
 	public function __invoke(ImportTimeularToTimesheetCommand $command): void {
