@@ -12,10 +12,10 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsMessageHandler]
-final class FetchTimesheetActivitiesHandler {
+final readonly class FetchTimesheetActivitiesHandler {
 	public function __construct(
-		private readonly Bus $bus,
-		private readonly HttpClientInterface $client
+		private Bus $bus,
+		private HttpClientInterface $client
 	) {
 	}
 
@@ -40,10 +40,11 @@ final class FetchTimesheetActivitiesHandler {
 		$activities = [];
 		foreach ($projects as $project) {
 			$projectName = $project['name'];
+			$isActive = boolval($project['status']);
 
 			if ($project['employees'] !== '') {
 				foreach ($project['activities'] as $activity) {
-					$activities[] = Activity::create($activity['id'], $projectName . ' - ' . $activity['name']);
+					$activities[] = Activity::create($activity['id'], $projectName . ' - ' . $activity['name'], $isActive);
 				}
 			}
 		}

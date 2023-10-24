@@ -8,10 +8,10 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsMessageHandler]
-final class FetchTimeularActivitiesHandler {
+final readonly class FetchTimeularActivitiesHandler {
 	public function __construct(
-		private readonly Bus $bus,
-		private readonly HttpClientInterface $client
+		private Bus $bus,
+		private HttpClientInterface $client
 	) {
 	}
 
@@ -33,7 +33,7 @@ final class FetchTimeularActivitiesHandler {
 
 		$activities = [];
 		foreach ($content['activities'] as $activity) {
-			$activities[] = Activity::create($activity['id'], $activity['name']);
+			$activities[] = Activity::create($activity['id'], $activity['name'], true);
 		}
 
 		return $activities;

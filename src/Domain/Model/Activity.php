@@ -2,10 +2,11 @@
 
 namespace App\Domain\Model;
 
-final class Activity {
+final readonly class Activity {
 	private function __construct(
-		private readonly int $id,
-		private readonly string $name
+		private int $id,
+		private string $name,
+		private bool $isActive
 	) {
 	}
 
@@ -17,7 +18,11 @@ final class Activity {
 		return $this->name;
 	}
 
-	public static function create(int $id, string $name): self {
-		return new self($id, $name);
+	public function isActive(): bool {
+		return $this->isActive;
+	}
+
+	public static function create(int $id, string $name, bool $isActive): self {
+		return new self($id, $name, $isActive);
 	}
 }

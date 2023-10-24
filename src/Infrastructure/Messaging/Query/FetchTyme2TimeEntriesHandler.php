@@ -10,17 +10,30 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-final class FetchTyme2TimeEntriesHandler {
+final readonly class FetchTyme2TimeEntriesHandler {
+	const LOG_MESSAGE_NOT_MAPPED = "The activity '%s' is not mapped with Timesheet. It will be imported in 'Other'";
+	const LOG_MESSAGE_INACTIVE = "The activity '%s' is not active in Timesheet. It might need to be changed";
+
 	public function __construct(
-		private readonly Bus $bus,
-		private readonly LoggerInterface $logger
+		private Bus $bus,
+		private LoggerInterface $logger
 	) {
 	}
 
 	public function __invoke(FetchTyme2TimeEntriesQuery $query): array {
 		$filename = $query->filename();
 
-		$timesheetMapping = $this->timesheetMapping();
+		/** @var Activity[] $activities */
+		$activities = $this->bus->handle(new FetchTimesheetActivitiesQuery());
+
+		$timesheetMapping = [];
+		$activitiesById = [];
+		foreach ($activities as $activity) {
+			$timesheetMapping[$activity->id()] = $activity->id();
+			$activitiesById[$activity->id()] = $activity;
+		}
+
+		$timesheetMapping = TimesheetMapping::fromMapping($timesheetMapping);
 
 		$string = file_get_contents($filename);
 		$content = json_decode($string, true);
@@ -30,25 +43,19 @@ final class FetchTyme2TimeEntriesHandler {
 			$activityId = explode(' | ', $timeEntry['project'])[0];
 
 			if (!is_numeric($activityId) || $timesheetMapping->exists($activityId) === false) {
-				$this->logger->warning("The activity '$activityId' is not mapped with Timesheet. It will be imported in 'Other'");
+				$this->logger->warning(sprintf(self::LOG_MESSAGE_NOT_MAPPED, $activityId));
 				$activityId = TimesheetMapping::TIMESHEET_OTHER;
+			} else {
+				$activity = $activitiesById[$activityId] ?? null;
+
+				if (!$activity?->isActive()) {
+					$this->logger->warning(sprintf(self::LOG_MESSAGE_INACTIVE, $activityId));
+				}
 			}
 
 			$timeEntries[] = TimeEntry::fromTyme2Array($timeEntry, $activityId);
 		}
 
 		return $timeEntries;
-	}
-
-	private function timesheetMapping(): TimesheetMapping {
-		/** @var Activity[] $activities */
-		$activities = $this->bus->handle(new FetchTimesheetActivitiesQuery());
-
-		$mapping = [];
-		foreach ($activities as $activity) {
-			$mapping[$activity->id()] = $activity->id();
-		}
-
-		return TimesheetMapping::fromMapping($mapping);
 	}
 }
