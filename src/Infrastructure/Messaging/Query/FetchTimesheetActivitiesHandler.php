@@ -1,13 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Infrastructure\Messaging\Query;
 
 use App\Domain\Messaging\Bus;
 use App\Domain\Model\Activity;
 use App\Infrastructure\Persistence\Vault\TimesheetVault;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\BrowserKit\CookieJar;
-use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -20,22 +17,20 @@ final readonly class FetchTimesheetActivitiesHandler {
 	}
 
 	public function __invoke(FetchTimesheetActivitiesQuery $query): array {
-		$phpSession = $this->bus->handle(new FetchTimesheetSessionIdQuery());
+		$token = $this->bus->handle(new FetchTimesheetAccessTokenQuery());
 
-		$cookieJar = new CookieJar();
-		$cookieJar->set(new Cookie('PHPSESSID', $phpSession));
-		$client = new HttpBrowser($this->client, null, $cookieJar);
-		$client->xmlHttpRequest(
-			'POST',
-			TimesheetVault::BASE_URL . '/project/list/format/json',
-			[],
-			[],
+		$response = $this->client->request(
+			'GET',
+			TimesheetVault::BASE_URL . '/project/list?format=json',
 			[
-				'Content-Type' => 'application/json',
-			]
+				'headers' => [
+					'Content-Type' => 'application/json',
+					'Authorization' => "Bearer $token",
+				],
+			],
 		);
 
-		$projects = json_decode($client->getResponse()->getContent(), true)['projects'];
+		$projects = $response->toArray()['projects'];
 
 		$activities = [];
 		foreach ($projects as $project) {

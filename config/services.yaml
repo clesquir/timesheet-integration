@@ -31,8 +31,7 @@ services:
 
     App\Infrastructure\Persistence\Vault\TimesheetVault:
       arguments:
-        - '%env(TIMESHEET_EMAIL)%'
-        - '%env(TIMESHEET_PASSWORD)%'
+        - '%env(TIMESHEET_DEVICE_CODE)%'
 
     App\Infrastructure\Persistence\Vault\TimeularVault:
       arguments:

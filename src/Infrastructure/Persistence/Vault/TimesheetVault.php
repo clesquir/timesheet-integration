@@ -1,21 +1,19 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Infrastructure\Persistence\Vault;
 
-final class TimesheetVault {
-	const BASE_URL = 'https://devalto.timesheet.wtf';
+final readonly class TimesheetVault {
+	const KEYCLOAK_DEVICE_AUTH = 'https://keycloak.deval.to/auth/realms/DevAlto/protocol/openid-connect/auth/device';
+	const KEYCLOAK_TOKEN = 'https://keycloak.deval.to/auth/realms/DevAlto/protocol/openid-connect/token';
+	const KEYCLOAK_CLIENT_ID = 'timesheet';
+	const BASE_URL = 'https://devalto-stg.timesheet.wtf';
 
 	public function __construct(
-		private readonly string $email,
-		private readonly string $password
+		private string $deviceCode
 	) {
 	}
 
-	public function email(): string {
-		return $this->email;
-	}
-
-	public function password(): string {
-		return $this->password;
+	public function deviceCode(): string {
+		return $this->deviceCode;
 	}
 }
