@@ -29,10 +29,6 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Infrastructure\Persistence\Vault\TimesheetVault:
-      arguments:
-        - '%env(TIMESHEET_DEVICE_CODE)%'
-
     App\Infrastructure\Persistence\Vault\TimeularVault:
       arguments:
         - '%env(TIMEULAR_API_KEY)%'

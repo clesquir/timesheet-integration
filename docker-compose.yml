@@ -20,3 +20,4 @@ services:
       PHP_IDE_CONFIG: "serverName=timesheet-integration"
     volumes:
       - .:/app
+      - /tmp:/tmp

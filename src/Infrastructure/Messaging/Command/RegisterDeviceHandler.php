@@ -3,6 +3,7 @@
 namespace App\Infrastructure\Messaging\Command;
 
 use App\Infrastructure\Persistence\Vault\TimesheetVault;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -28,10 +29,15 @@ final readonly class RegisterDeviceHandler {
 		);
 		$content = $response->toArray();
 
+		$filesystem = new Filesystem();
+		if ($filesystem->exists(TimesheetVault::CREDENTIALS_FILE)) {
+			$filesystem->remove(TimesheetVault::CREDENTIALS_FILE);
+		}
+
+		$filesystem->dumpFile(TimesheetVault::CREDENTIALS_FILE, json_encode(['device_code' => $content['device_code']]));
+
 		return [
 			'Go to this URL to register and sign in with your devalto\' email: ' . $content['verification_uri_complete'],
-			'Put this in .env.dev.local:',
-			'TIMESHEET_DEVICE_CODE=' . $content['device_code'],
 		];
 	}
 }

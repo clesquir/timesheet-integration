@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Messaging\Query;
 
+use App\Domain\Messaging\Bus;
 use App\Infrastructure\Persistence\Vault\TimesheetVault;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
@@ -9,12 +10,14 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 #[AsMessageHandler]
 final readonly class FetchTimesheetAccessTokenHandler {
 	public function __construct(
-		private HttpClientInterface $client,
-		private TimesheetVault $timesheetVault
+		private Bus $bus,
+		private HttpClientInterface $client
 	) {
 	}
 
 	public function __invoke(FetchTimesheetAccessTokenQuery $query): string {
+		$credentials = $this->bus->handle(new FetchTimesheetCredentialsQuery());
+
 		$response = $this->client->request(
 			'POST',
 			TimesheetVault::KEYCLOAK_TOKEN,
@@ -25,7 +28,7 @@ final readonly class FetchTimesheetAccessTokenHandler {
 				'body' => [
 					'grant_type' => 'urn:ietf:params:oauth:grant-type:device_code',
 					'client_id' => TimesheetVault::KEYCLOAK_CLIENT_ID,
-					'device_code' => $this->timesheetVault->deviceCode(),
+					'device_code' => $credentials['device_code'],
 				],
 			]
 		);

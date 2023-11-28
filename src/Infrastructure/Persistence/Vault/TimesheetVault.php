@@ -7,13 +7,5 @@ final readonly class TimesheetVault {
 	const KEYCLOAK_TOKEN = 'https://keycloak.deval.to/auth/realms/DevAlto/protocol/openid-connect/token';
 	const KEYCLOAK_CLIENT_ID = 'timesheet';
 	const BASE_URL = 'https://devalto-stg.timesheet.wtf';
-
-	public function __construct(
-		private string $deviceCode
-	) {
-	}
-
-	public function deviceCode(): string {
-		return $this->deviceCode;
-	}
+	const CREDENTIALS_FILE = '/tmp/timesheet-credentials.json';
 }

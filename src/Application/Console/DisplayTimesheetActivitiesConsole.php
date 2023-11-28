@@ -5,7 +5,7 @@ namespace App\Application\Console;
 use App\Domain\Messaging\Bus;
 use App\Domain\Model\Activity;
 use App\Infrastructure\Messaging\Query\FetchTimesheetActivitiesQuery;
-use App\Infrastructure\Persistence\Vault\TimesheetVault;
+use App\Infrastructure\Messaging\Query\FetchTimesheetCredentialsQuery;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
@@ -13,8 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class DisplayTimesheetActivitiesConsole extends Command {
 	public function __construct(
-		private readonly Bus $bus,
-		private readonly TimesheetVault $timesheetVault
+		private readonly Bus $bus
 	) {
 		parent::__construct();
 	}
@@ -25,12 +24,7 @@ final class DisplayTimesheetActivitiesConsole extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
-		if ($this->timesheetVault->deviceCode() === '') {
-			$output->writeln('<error>Device not registered.</error>');
-			$output->writeln('<error>Please run app:device:register.</error>');
-
-			return 1;
-		}
+		$this->bus->handle(new FetchTimesheetCredentialsQuery());
 
 		$tbl = new Table($output);
 
