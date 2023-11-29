@@ -13,7 +13,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class DisplayTimesheetActivitiesConsole extends Command {
 	public function __construct(
-		private readonly Bus $bus
+		private readonly Bus $bus,
+		private readonly RegisterDeviceConsole $registerDeviceConsole
 	) {
 		parent::__construct();
 	}
@@ -24,7 +25,14 @@ final class DisplayTimesheetActivitiesConsole extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
-		$this->bus->handle(new FetchTimesheetCredentialsQuery());
+		$credentials = $this->bus->handle(new FetchTimesheetCredentialsQuery());
+
+		if ($credentials === null) {
+			$this->registerDeviceConsole->run($input, $output);
+			$output->writeln('<error>Device not registered. Please follow the instructions above and then run the command again.</error>');
+
+			return 1;
+		}
 
 		$tbl = new Table($output);
 

@@ -37,7 +37,7 @@ final readonly class RegisterDeviceHandler {
 		$filesystem->dumpFile(TimesheetVault::CREDENTIALS_FILE, json_encode(['device_code' => $content['device_code']]));
 
 		return [
-			'Go to this URL to register and sign in with your devalto\' email: ' . $content['verification_uri_complete'],
+			'Go to this URL to register and sign in with your devalto\'s email: ' . $content['verification_uri_complete'],
 		];
 	}
 }
