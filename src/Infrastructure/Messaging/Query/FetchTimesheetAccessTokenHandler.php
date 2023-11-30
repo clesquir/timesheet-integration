@@ -3,10 +3,15 @@
 namespace App\Infrastructure\Messaging\Query;
 
 use App\Domain\Messaging\Bus;
+use App\Infrastructure\Messaging\Command\GrantTimesheetDeviceCommand;
+use App\Infrastructure\Messaging\Command\RefreshTimesheetTokenCommand;
+use App\Infrastructure\Messaging\Command\SaveTimesheetCredentialsCommand;
 use App\Infrastructure\Persistence\Vault\TimesheetVault;
 use LogicException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Throwable;
 
 #[AsMessageHandler]
 final readonly class FetchTimesheetAccessTokenHandler {
@@ -20,25 +25,24 @@ final readonly class FetchTimesheetAccessTokenHandler {
 		$credentials = $this->bus->handle(new FetchTimesheetCredentialsQuery());
 
 		if ($credentials === null) {
-			throw new LogicException('Device not registered');
+			throw new LogicException('Device not registered. Please run app:timesheet:device:register');
 		}
 
-		$response = $this->client->request(
-			'POST',
-			TimesheetVault::KEYCLOAK_TOKEN,
-			[
-				'headers' => [
-					'Content-Type' => 'application/json',
-				],
-				'body' => [
-					'grant_type' => 'urn:ietf:params:oauth:grant-type:device_code',
-					'client_id' => TimesheetVault::KEYCLOAK_CLIENT_ID,
-					'device_code' => $credentials['device_code'],
-				],
-			]
-		);
-		$content = $response->toArray();
+		if (!isset($credentials['refresh_token'])) {
+			if (!isset($credentials['device_code'])) {
+				throw new LogicException('Device not registered. Please run app:timesheet:device:register');
+			}
 
-		return $content['access_token'];
+			$credentials = $this->bus->handle(new GrantTimesheetDeviceCommand($credentials['device_code']));
+		}
+
+		if (!isset($credentials['refresh_token'])) {
+			throw new LogicException('Device not registered. Please run app:timesheet:device:register');
+		}
+		$credentials = $this->bus->handle(new RefreshTimesheetTokenCommand($credentials['refresh_token']));
+
+		$this->bus->handle(new SaveTimesheetCredentialsCommand($credentials));
+
+		return $credentials['access_token'];
 	}
 }

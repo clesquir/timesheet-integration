@@ -3,12 +3,12 @@
 namespace App\Application\Console;
 
 use App\Domain\Messaging\Bus;
-use App\Infrastructure\Messaging\Command\RegisterDeviceCommand;
+use App\Infrastructure\Messaging\Command\RegisterTimesheetDeviceCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class RegisterDeviceConsole extends Command {
+final class RegisterTimesheetDeviceConsole extends Command {
 	public function __construct(
 		private readonly Bus $bus
 	) {
@@ -16,7 +16,7 @@ final class RegisterDeviceConsole extends Command {
 	}
 
 	protected function configure(): void {
-		$this->setName('app:device:register')
+		$this->setName('app:timesheet:device:register')
 			->setDescription('Register device.');
 	}
 
@@ -26,7 +26,7 @@ final class RegisterDeviceConsole extends Command {
 				function(string $line) {
 					return "<info>$line</info>";
 				},
-				$this->bus->handle(new RegisterDeviceCommand())
+				$this->bus->handle(new RegisterTimesheetDeviceCommand())
 			),
 			true
 		);

@@ -15,7 +15,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class ImportTimeularToTimesheetConsole extends Command {
 	public function __construct(
 		private readonly Bus $bus,
-		private readonly RegisterDeviceConsole $registerDeviceConsole
+		private readonly RegisterTimesheetDeviceConsole $registerDeviceConsole
 	) {
 		parent::__construct();
 	}

@@ -14,13 +14,13 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class DisplayTimesheetActivitiesConsole extends Command {
 	public function __construct(
 		private readonly Bus $bus,
-		private readonly RegisterDeviceConsole $registerDeviceConsole
+		private readonly RegisterTimesheetDeviceConsole $registerDeviceConsole
 	) {
 		parent::__construct();
 	}
 
 	protected function configure(): void {
-		$this->setName('app:activities:timesheet:display')
+		$this->setName('app:timesheet:activities:display')
 			->setDescription('Displays Timesheet activities.');
 	}
 

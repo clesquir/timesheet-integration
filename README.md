@@ -4,7 +4,7 @@ Run `sh resources/dev/setup.sh`
 
 # Register device
 
-Run `docker-compose run app bash -c "console app:device:register -v"`
+Run `docker-compose run app bash -c "console app:timesheet:device:register -v"`
 
 # Setup Vaults
 
@@ -23,11 +23,11 @@ using the following format `TIMEULAR_ACTIVITY: TIMESHEET_ACTIVITY`.
 
 To get the list of Timeular activities, execute this command:
 
-`docker-compose run app bash -c "console app:activities:timeular:display -v"`
+`docker-compose run app bash -c "console app:timeular:activities:display -v"`
 
 To get the list of Timesheet activities, execute this command:
 
-`docker-compose run app bash -c "console app:activities:timesheet:display -v"`
+`docker-compose run app bash -c "console app:timesheet:activities:display -v"`
 
 # Import entry from Timeular
 

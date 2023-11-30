@@ -2,5 +2,5 @@
 
 namespace App\Infrastructure\Messaging\Command;
 
-final readonly class RegisterDeviceCommand {
+final readonly class RegisterTimesheetDeviceCommand {
 }

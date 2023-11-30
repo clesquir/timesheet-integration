@@ -8,13 +8,13 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsMessageHandler]
-final readonly class RegisterDeviceHandler {
+final readonly class RegisterTimesheetDeviceHandler {
 	public function __construct(
 		private HttpClientInterface $client
 	) {
 	}
 
-	public function __invoke(RegisterDeviceCommand $query): array {
+	public function __invoke(RegisterTimesheetDeviceCommand $command): array {
 		$response = $this->client->request(
 			'POST',
 			TimesheetVault::KEYCLOAK_DEVICE_AUTH,

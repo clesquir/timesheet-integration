@@ -18,7 +18,7 @@ final class DisplayTimeularActivitiesConsole extends Command {
 	}
 
 	protected function configure(): void {
-		$this->setName('app:activities:timeular:display')
+		$this->setName('app:timeular:activities:display')
 			->setDescription('Displays Timeular activities.');
 	}
 
