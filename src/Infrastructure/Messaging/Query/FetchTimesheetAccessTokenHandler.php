@@ -6,18 +6,13 @@ use App\Domain\Messaging\Bus;
 use App\Infrastructure\Messaging\Command\GrantTimesheetDeviceCommand;
 use App\Infrastructure\Messaging\Command\RefreshTimesheetTokenCommand;
 use App\Infrastructure\Messaging\Command\SaveTimesheetCredentialsCommand;
-use App\Infrastructure\Persistence\Vault\TimesheetVault;
 use LogicException;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
-use Throwable;
 
 #[AsMessageHandler]
 final readonly class FetchTimesheetAccessTokenHandler {
 	public function __construct(
-		private Bus $bus,
-		private HttpClientInterface $client
+		private Bus $bus
 	) {
 	}
 
