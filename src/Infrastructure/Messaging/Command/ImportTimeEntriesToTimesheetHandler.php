@@ -68,15 +68,15 @@ final readonly class ImportTimeEntriesToTimesheetHandler {
 			$this->logger->notice('Importing to timesheet: ' . json_encode($parameters));
 
 			if ($command->dryRun() === false) {
-				$this->client->request(
+				$client = new HttpBrowser($this->client);
+				$client->xmlHttpRequest(
 					'POST',
 					TimesheetVault::BASE_URL . '/time/add/format/json',
+					$parameters,
+					[],
 					[
-						'headers' => [
-							'Content-Type' => 'application/json',
-							'Authorization' => 'Bearer ' . $token,
-						],
-						'json' => $parameters,
+						'Content-Type' => 'application/json',
+						'Authorization' => 'Bearer ' . $token,
 					]
 				);
 			}
