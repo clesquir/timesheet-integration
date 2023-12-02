@@ -31,10 +31,10 @@ final readonly class GrantTimesheetDeviceHandler {
 					],
 				]
 			);
+
+			return $response->toArray();
 		} catch (Throwable) {
 			throw new LogicException('Device access has expired. Please run app:timesheet:device:register');
 		}
-
-		return $response->toArray();
 	}
 }
