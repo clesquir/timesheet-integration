@@ -29,7 +29,7 @@ final readonly class ImportTimeEntriesToTimesheetHandler {
 		$timeEntries = $command->timeEntries();
 		usort(
 			$timeEntries,
-			function(TimeEntry $timeEntryA, TimeEntry $timeEntryB) {
+			function (TimeEntry $timeEntryA, TimeEntry $timeEntryB) {
 				return $timeEntryA->startedAt() <=> $timeEntryB->startedAt();
 			}
 		);
@@ -68,15 +68,16 @@ final readonly class ImportTimeEntriesToTimesheetHandler {
 			$this->logger->notice('Importing to timesheet: ' . json_encode($parameters));
 
 			if ($command->dryRun() === false) {
-				$client = new HttpBrowser($this->client);
-				$client->xmlHttpRequest(
+				$this->client->request(
 					'POST',
 					TimesheetVault::BASE_URL . '/time/add/format/json',
-					$parameters,
-					[],
 					[
-						'Content-Type' => 'application/json',
-						'Authorization' => 'Bearer ' . $token,
+						'headers' => [
+							'Content-Type' => 'application/json',
+							'X-Requested-With' => 'XMLHttpRequest',
+							'Authorization' => 'Bearer ' . $token,
+						],
+						'body' => $parameters,
 					]
 				);
 			}
