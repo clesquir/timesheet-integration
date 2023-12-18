@@ -2,16 +2,13 @@
 
 Run `sh resources/dev/setup.sh`
 
+# Register device
+
+Run `docker-compose run app bash -c "console app:timesheet:device:register -v"`
+
 # Setup Vaults
 
-Create a file .env.dev.local and enter the following content with your values:
-
-```
-TIMEULAR_API_KEY=
-TIMEULAR_API_SECRET=
-TIMESHEET_EMAIL=
-TIMESHEET_PASSWORD=
-```
+Copy .env.dev.local.dist to .env.dev.local and fill the variables with your values.
 
 # Generate Timeular API key and secret
 
@@ -26,11 +23,11 @@ using the following format `TIMEULAR_ACTIVITY: TIMESHEET_ACTIVITY`.
 
 To get the list of Timeular activities, execute this command:
 
-`docker-compose run --rm app bash -c "console app:activities:timeular:display"`
+`docker-compose run --rm app bash -c "console app:timeular:activities:display -v"`
 
 To get the list of Timesheet activities, execute this command:
 
-`docker-compose run --rm app bash -c "console app:activities:timesheet:display"`
+`docker-compose run --rm app bash -c "console app:timesheet:activities:display -v"`
 
 # Import entry from Timeular
 

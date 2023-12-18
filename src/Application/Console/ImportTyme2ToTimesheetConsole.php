@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Application\Console;
 
 use App\Domain\Messaging\Bus;
 use App\Infrastructure\Messaging\Command\ImportTyme2ToTimesheetCommand;
+use App\Infrastructure\Messaging\Query\FetchTimesheetCredentialsQuery;
 use LogicException;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -13,7 +14,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ImportTyme2ToTimesheetConsole extends Command {
 	public function __construct(
-		private readonly Bus $bus
+		private readonly Bus $bus,
+		private readonly RegisterTimesheetDeviceConsole $registerDeviceConsole
 	) {
 		parent::__construct();
 	}
@@ -27,6 +29,15 @@ final class ImportTyme2ToTimesheetConsole extends Command {
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
+		$credentials = $this->bus->handle(new FetchTimesheetCredentialsQuery());
+
+		if ($credentials === null) {
+			$this->registerDeviceConsole->run($input, $output);
+			$output->writeln('<error>Device not registered. Please follow the instructions above and then run the command again.</error>');
+
+			return 1;
+		}
+
 		$filename = $input->getArgument('filename');
 		$noComment = $input->getOption('no-comment');
 		$dryRun = $input->getOption('dry-run');

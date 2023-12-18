@@ -1,10 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Infrastructure\Messaging\Command;
 
 use App\Domain\Messaging\Bus;
 use App\Domain\Model\TimeEntry;
-use App\Infrastructure\Messaging\Query\FetchTimesheetSessionIdQuery;
+use App\Infrastructure\Messaging\Query\FetchTimesheetAccessTokenQuery;
 use App\Infrastructure\Persistence\Vault\TimesheetVault;
 use DateTime;
 use Psr\Log\LoggerInterface;
@@ -15,21 +15,21 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 #[AsMessageHandler]
-final class ImportTimeEntriesToTimesheetHandler {
+final readonly class ImportTimeEntriesToTimesheetHandler {
 	public function __construct(
-		private readonly Bus $bus,
-		private readonly HttpClientInterface $client,
-		private readonly LoggerInterface $logger
+		private Bus $bus,
+		private HttpClientInterface $client,
+		private LoggerInterface $logger
 	) {
 	}
 
 	public function __invoke(ImportTimeEntriesToTimesheetCommand $command): void {
-		$phpSession = $this->bus->handle(new FetchTimesheetSessionIdQuery());
+		$token = $this->bus->handle(new FetchTimesheetAccessTokenQuery());
 
 		$timeEntries = $command->timeEntries();
 		usort(
 			$timeEntries,
-			function(TimeEntry $timeEntryA, TimeEntry $timeEntryB) {
+			function (TimeEntry $timeEntryA, TimeEntry $timeEntryB) {
 				return $timeEntryA->startedAt() <=> $timeEntryB->startedAt();
 			}
 		);
@@ -68,16 +68,16 @@ final class ImportTimeEntriesToTimesheetHandler {
 			$this->logger->notice('Importing to timesheet: ' . json_encode($parameters));
 
 			if ($command->dryRun() === false) {
-				$cookieJar = new CookieJar();
-				$cookieJar->set(new Cookie('PHPSESSID', $phpSession));
-				$client = new HttpBrowser($this->client, null, $cookieJar);
-				$client->xmlHttpRequest(
+				$this->client->request(
 					'POST',
 					TimesheetVault::BASE_URL . '/time/add/format/json',
-					$parameters,
-					[],
 					[
-						'Content-Type' => 'application/json',
+						'headers' => [
+							'Content-Type' => 'application/json',
+							'X-Requested-With' => 'XMLHttpRequest',
+							'Authorization' => 'Bearer ' . $token,
+						],
+						'body' => $parameters,
 					]
 				);
 			}

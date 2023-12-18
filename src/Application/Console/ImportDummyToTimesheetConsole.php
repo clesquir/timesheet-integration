@@ -3,16 +3,15 @@
 namespace App\Application\Console;
 
 use App\Domain\Messaging\Bus;
-use App\Infrastructure\Messaging\Command\ImportTimeularToTimesheetCommand;
+use App\Domain\Model\TimeEntry;
+use App\Infrastructure\Messaging\Command\ImportTimeEntriesToTimesheetCommand;
 use App\Infrastructure\Messaging\Query\FetchTimesheetCredentialsQuery;
 use DateTimeImmutable;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-final class ImportTimeularToTimesheetConsole extends Command {
+final class ImportDummyToTimesheetConsole extends Command {
 	public function __construct(
 		private readonly Bus $bus,
 		private readonly RegisterTimesheetDeviceConsole $registerDeviceConsole
@@ -21,11 +20,8 @@ final class ImportTimeularToTimesheetConsole extends Command {
 	}
 
 	protected function configure(): void {
-		$this->setName('app:import:timeular-to-timesheet')
-			->setDescription('Import Timeular entries to Timesheet.')
-			->addArgument('date', InputArgument::REQUIRED, 'Date to import')
-			->addOption('no-comment', null, InputOption::VALUE_NONE, 'Do not add comments')
-			->addOption('dry-run', null, InputOption::VALUE_NONE, 'Do not import time entries');
+		$this->setName('app:import:dummy-to-timesheet')
+			->setDescription('Import Timeular entries to Timesheet.');
 	}
 
 	protected function execute(InputInterface $input, OutputInterface $output): int {
@@ -38,11 +34,13 @@ final class ImportTimeularToTimesheetConsole extends Command {
 			return 1;
 		}
 
-		$date = new DateTimeImmutable($input->getArgument('date'));
-		$noComment = $input->getOption('no-comment');
-		$dryRun = $input->getOption('dry-run');
-
-		$this->bus->handle(new ImportTimeularToTimesheetCommand($date, $noComment, $dryRun));
+		$this->bus->handle(
+			new ImportTimeEntriesToTimesheetCommand(
+				[TimeEntry::fixtureWithStartedAtStoppedAt(new DateTimeImmutable('2020-01-01 08:00'), new DateTimeImmutable('2020-01-01 12:00'))],
+				true,
+				false
+			)
+		);
 
 		return 0;
 	}

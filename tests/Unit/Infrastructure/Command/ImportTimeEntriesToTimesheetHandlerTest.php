@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace App\Tests\Unit\Infrastructure\Command;
 
@@ -6,7 +6,7 @@ use App\Domain\Model\TimeEntry;
 use App\Infrastructure\Messaging\AppBus;
 use App\Infrastructure\Messaging\Command\ImportTimeEntriesToTimesheetCommand;
 use App\Infrastructure\Messaging\Command\ImportTimeEntriesToTimesheetHandler;
-use App\Infrastructure\Messaging\Query\FetchTimesheetSessionIdQuery;
+use App\Infrastructure\Messaging\Query\FetchTimesheetAccessTokenQuery;
 use App\Infrastructure\Persistence\Vault\TimesheetVault;
 use App\Tests\Collaborator\Infrastructure\Messaging\AlwaysSameHandlerForMessageClass;
 use DateTimeImmutable;
@@ -20,7 +20,7 @@ final class ImportTimeEntriesToTimesheetHandlerTest extends TestCase {
 	public function test_it_adds_entries_to_timesheet_chronologically() {
 		$bus = new AlwaysSameHandlerForMessageClass(new AppBus(new MessageBus()));
 		$bus->replaceHandler(
-			FetchTimesheetSessionIdQuery::class,
+			FetchTimesheetAccessTokenQuery::class,
 			function() {
 				return uniqid();
 			}
