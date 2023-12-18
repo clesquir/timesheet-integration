@@ -4,7 +4,7 @@ Run `sh resources/dev/setup.sh`
 
 # Register device
 
-Run `docker-compose run app bash -c "console app:timesheet:device:register -v"`
+Run `docker-compose run --rm app bash -c "console app:timesheet:device:register -v"`
 
 # Setup Vaults
 
