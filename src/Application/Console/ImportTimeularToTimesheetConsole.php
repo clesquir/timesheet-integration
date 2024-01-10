@@ -7,6 +7,7 @@ use App\Infrastructure\Messaging\Command\ImportTimeularToTimesheetCommand;
 use App\Infrastructure\Messaging\Query\FetchTimesheetCredentialsQuery;
 use DateTimeImmutable;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -32,7 +33,7 @@ final class ImportTimeularToTimesheetConsole extends Command {
 		$credentials = $this->bus->handle(new FetchTimesheetCredentialsQuery());
 
 		if ($credentials === null) {
-			$this->registerDeviceConsole->run($input, $output);
+			$this->registerDeviceConsole->run(new ArrayInput([]), $output);
 			$output->writeln('<error>Device not registered. Please follow the instructions above and then run the command again.</error>');
 
 			return 1;
