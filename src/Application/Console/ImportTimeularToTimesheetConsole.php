@@ -3,6 +3,7 @@
 namespace App\Application\Console;
 
 use App\Domain\Messaging\Bus;
+use App\Domain\Model\DeviceAccessExpiredException;
 use App\Infrastructure\Messaging\Command\ImportTimeularToTimesheetCommand;
 use App\Infrastructure\Messaging\Query\FetchTimesheetCredentialsQuery;
 use DateTimeImmutable;
@@ -43,7 +44,14 @@ final class ImportTimeularToTimesheetConsole extends Command {
 		$noComment = $input->getOption('no-comment');
 		$dryRun = $input->getOption('dry-run');
 
-		$this->bus->handle(new ImportTimeularToTimesheetCommand($date, $noComment, $dryRun));
+		try {
+			$this->bus->handle(new ImportTimeularToTimesheetCommand($date, $noComment, $dryRun));
+		} catch (DeviceAccessExpiredException) {
+			$this->registerDeviceConsole->run(new ArrayInput([]), $output);
+			$output->writeln('<error>Device access has expired. Please follow the instructions above and then run the command again.</error>');
+
+			return 1;
+		}
 
 		return 0;
 	}

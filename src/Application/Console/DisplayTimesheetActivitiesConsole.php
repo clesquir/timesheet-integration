@@ -4,6 +4,7 @@ namespace App\Application\Console;
 
 use App\Domain\Messaging\Bus;
 use App\Domain\Model\Activity;
+use App\Domain\Model\DeviceAccessExpiredException;
 use App\Infrastructure\Messaging\Query\FetchTimesheetActivitiesQuery;
 use App\Infrastructure\Messaging\Query\FetchTimesheetCredentialsQuery;
 use Symfony\Component\Console\Command\Command;
@@ -43,19 +44,26 @@ final class DisplayTimesheetActivitiesConsole extends Command {
 			]
 		);
 
-		/** @var Activity[] $activities */
-		$activities = $this->bus->handle(new FetchTimesheetActivitiesQuery());
+		try {
+			/** @var Activity[] $activities */
+			$activities = $this->bus->handle(new FetchTimesheetActivitiesQuery());
 
-		foreach ($activities as $activity) {
-			$tbl->addRow(
-				[
-					$activity->id(),
-					$activity->name(),
-				]
-			);
+			foreach ($activities as $activity) {
+				$tbl->addRow(
+					[
+						$activity->id(),
+						$activity->name(),
+					]
+				);
+			}
+
+			$tbl->render();
+		} catch (DeviceAccessExpiredException) {
+			$this->registerDeviceConsole->run($input, $output);
+			$output->writeln('<error>Device access has expired. Please follow the instructions above and then run the command again.</error>');
+
+			return 1;
 		}
-
-		$tbl->render();
 
 		return 0;
 	}

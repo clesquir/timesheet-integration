@@ -3,6 +3,7 @@
 namespace App\Application\Console;
 
 use App\Domain\Messaging\Bus;
+use App\Domain\Model\DeviceAccessExpiredException;
 use App\Infrastructure\Messaging\Command\ImportTyme2ToTimesheetCommand;
 use App\Infrastructure\Messaging\Query\FetchTimesheetCredentialsQuery;
 use LogicException;
@@ -47,7 +48,14 @@ final class ImportTyme2ToTimesheetConsole extends Command {
 			throw new LogicException('File not found');
 		}
 
-		$this->bus->handle(new ImportTyme2ToTimesheetCommand($filename, $noComment, $dryRun));
+		try {
+			$this->bus->handle(new ImportTyme2ToTimesheetCommand($filename, $noComment, $dryRun));
+		} catch (DeviceAccessExpiredException) {
+			$this->registerDeviceConsole->run(new ArrayInput([]), $output);
+			$output->writeln('<error>Device access has expired. Please follow the instructions above and then run the command again.</error>');
+
+			return 1;
+		}
 
 		return 0;
 	}

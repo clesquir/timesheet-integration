@@ -3,6 +3,7 @@
 namespace App\Application\Console;
 
 use App\Domain\Messaging\Bus;
+use App\Domain\Model\DeviceAccessExpiredException;
 use App\Domain\Model\TimeEntry;
 use App\Infrastructure\Messaging\Command\ImportTimeEntriesToTimesheetCommand;
 use App\Infrastructure\Messaging\Query\FetchTimesheetCredentialsQuery;
@@ -34,13 +35,20 @@ final class ImportDummyToTimesheetConsole extends Command {
 			return 1;
 		}
 
-		$this->bus->handle(
-			new ImportTimeEntriesToTimesheetCommand(
-				[TimeEntry::fixtureWithStartedAtStoppedAt(new DateTimeImmutable('2020-01-01 08:00'), new DateTimeImmutable('2020-01-01 12:00'))],
-				true,
-				false
-			)
-		);
+		try {
+			$this->bus->handle(
+				new ImportTimeEntriesToTimesheetCommand(
+					[TimeEntry::fixtureWithStartedAtStoppedAt(new DateTimeImmutable('2020-01-01 08:00'), new DateTimeImmutable('2020-01-01 12:00'))],
+					true,
+					false
+				)
+			);
+		} catch (DeviceAccessExpiredException) {
+			$this->registerDeviceConsole->run($input, $output);
+			$output->writeln('<error>Device access has expired. Please follow the instructions above and then run the command again.</error>');
+
+			return 1;
+		}
 
 		return 0;
 	}

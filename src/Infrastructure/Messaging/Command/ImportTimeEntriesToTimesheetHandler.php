@@ -8,9 +8,6 @@ use App\Infrastructure\Messaging\Query\FetchTimesheetAccessTokenQuery;
 use App\Infrastructure\Persistence\Vault\TimesheetVault;
 use DateTime;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\BrowserKit\Cookie;
-use Symfony\Component\BrowserKit\CookieJar;
-use Symfony\Component\BrowserKit\HttpBrowser;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 

@@ -2,8 +2,8 @@
 
 namespace App\Infrastructure\Messaging\Command;
 
+use App\Domain\Model\DeviceAccessExpiredException;
 use App\Infrastructure\Persistence\Vault\TimesheetVault;
-use LogicException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Throwable;
@@ -34,7 +34,7 @@ final readonly class RefreshTimesheetTokenHandler {
 
 			return $response->toArray();
 		} catch (Throwable) {
-			throw new LogicException('Device access has expired. Please run app:timesheet:device:register');
+			throw new DeviceAccessExpiredException('Device access has expired. Please run app:timesheet:device:register');
 		}
 	}
 }
